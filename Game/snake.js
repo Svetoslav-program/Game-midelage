@@ -127,11 +127,12 @@ class Block {
       if (e.keyCode == 32) {
         //start = true;
         ws.send("s1");
-      }
-      else if (e.keyCode == 72) {
+      } else if (e.keyCode == 72) {
         location.replace("/")
+
       } else if ([37, 38, 39, 40].includes(e.keyCode)) {
-        key_state.push(e.keyCode);
+        //key_state.push(e.keyCode);
+        ws.send("v1");
       } else if ([87, 65, 83, 68].includes(e.keyCode)) {
         key_stat2.push(e.keyCode);
       }
@@ -230,14 +231,17 @@ class Block {
   let ws = new WebSocket("ws://192.168.10.106:591/");
   //let ws = new WebSocket(" 192.168.1.68");
   ws.onmessage = function(message) {
-    if (message =="s1") {
+    if (message.data =="s1") {
       start = true;
+      console.log("Запускаем");
     }
-
-
     //chat.value = message.data + "\n" + chat.value;
     console.log(message);
-  };
+    if (message.data =="v1") {
+    key_state.push;
+    console.log("Успользуем");
+  }
+}
   ws.onopen = function() {
     /*field.addEventListener("keydown", function(event) {
       if(event.which === 13) {
