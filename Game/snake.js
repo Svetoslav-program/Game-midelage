@@ -38,6 +38,7 @@ class Block {
       ctx.fillText(this.name + " WINS!", width / 2, height / 2);
       setTimeout(() => {
         location.reload();
+        //ws.send("pw1")
       }, 1000)
     }
 
@@ -116,7 +117,7 @@ class Block {
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
-    time = 30;
+    time = 10;
     key_state = [];
     key_stat2 = [];
     start = false;
@@ -125,16 +126,17 @@ class Block {
     food = new Block(Math.floor(Math.random() * 19) * 25, Math.floor(Math.random() * 19) * 25, 25, 25, "(255, 0, 0)");
     addEventListener("keydown", (e) => {
       if (e.keyCode == 32) {
-        //start = true;
+        start = true;
         ws.send("s1");
       } else if (e.keyCode == 72) {
         location.replace("/")
 
       } else if ([37, 38, 39, 40].includes(e.keyCode)) {
-        //key_state.push(e.keyCode);
+        key_state.push(e.keyCode);
         ws.send("v1");
       } else if ([87, 65, 83, 68].includes(e.keyCode)) {
         key_stat2.push(e.keyCode);
+        ws.send("d1");
       }
     })
     loop = setInterval(menu);
@@ -144,6 +146,7 @@ class Block {
     clearInterval(frames);
     setTimeout(() => {
       winner.win();
+      //ws.send("w1");
     }, 1000);
   }
 
@@ -228,7 +231,7 @@ class Block {
   //window.onload = init;
   //let field = document.getElementById("field"),
       //chat = document.getElementById("chat");
-  let ws = new WebSocket("ws://192.168.10.106:591/");
+  let ws = new WebSocket("ws://localhost:591/");
   //let ws = new WebSocket(" 192.168.1.68");
   ws.onmessage = function(message) {
     if (message.data =="s1") {
@@ -237,10 +240,19 @@ class Block {
     }
     //chat.value = message.data + "\n" + chat.value;
     console.log(message);
+
     if (message.data =="v1") {
     key_state.push;
     console.log("Успользуем");
   }
+  console.log(message);
+
+  if (message.data =="d1") {
+  key_stat2.push;
+  console.log("Прогрессируем");
+  }
+  console.log(message);
+
 }
   ws.onopen = function() {
     /*field.addEventListener("keydown", function(event) {
