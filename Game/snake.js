@@ -112,31 +112,52 @@ class Block {
       return false;
     }
   }
+  function init_position(r1,r2,r3,r4,r5,r6) {
+    ply1 = new Snake(Math.floor(r1),Math.floor(r2), 25, 25, "(25, 150, 25)", "(0, 255, 0)", "GREEN",[37, 38, 39, 40]);
+    ply2 = new Snake(Math.floor(r3),Math.floor(r4), 25, 25, "(25, 25, 150)", "(0, 0, 255)", "BLUE", [65, 87, 68, 83]);
+    food = new Block(Math.floor(r5),Math.floor(r6), 25, 25, "(255, 0, 0)");
+  }
   function init() {
     canvas = document.getElementById("display");
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
-    time = 10;
+    time = 60;
     key_state = [];
     key_stat2 = [];
     start = false;
-    ply1 = new Snake(Math.floor(Math.random() * 19) * 25, Math.floor(Math.random() * 19) * 25, 25, 25, "(25, 150, 25)", "(0, 255, 0)", "GREEN",[37, 38, 39, 40])
-    ply2 = new Snake(Math.floor(Math.random() * 19) * 25, Math.floor(Math.random() * 19) * 25, 25, 25, "(25, 25, 150)", "(0, 0, 255)", "BLUE", [65, 87, 68, 83]);
-    food = new Block(Math.floor(Math.random() * 19) * 25, Math.floor(Math.random() * 19) * 25, 25, 25, "(255, 0, 0)");
+
     addEventListener("keydown", (e) => {
       if (e.keyCode == 32) {
-        start = true;
-        ws.send("s1");
+        //start = true;
+        //Math.floor(Math.random() * 19) * 25
+        mass=[];
+        mass.push(1);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        mass.push(Math.floor(Math.random() * 19) * 25);
+        ws.send(JSON.stringify(mass));
+        //ws.send("s1");
+
       } else if (e.keyCode == 72) {
         location.replace("/")
 
       } else if ([37, 38, 39, 40].includes(e.keyCode)) {
-        key_state.push(e.keyCode);
-        ws.send("v1");
+        //key_state.push(e.keyCode);
+        mass=[];
+        mass.push(2);
+        mass.push(e.keyCode);
+        ws.send(JSON.stringify(mass));
+        //ws.send("v1");
       } else if ([87, 65, 83, 68].includes(e.keyCode)) {
-        key_stat2.push(e.keyCode);
-        ws.send("d1");
+        //key_stat2.push(e.keyCode);
+        mass=[];
+        mass.push(3);
+        mass.push(e.keyCode);
+        ws.send(JSON.stringify(mass));
       }
     })
     loop = setInterval(menu);
@@ -234,26 +255,29 @@ class Block {
   let ws = new WebSocket("ws://localhost:591/");
   //let ws = new WebSocket(" 192.168.1.68");
   ws.onmessage = function(message) {
-    if (message.data =="s1") {
+    var gg = JSON.parse(message.data);
+    console.log(gg[0]);
+    if (gg[0] == 1) {
+      init_position(parseInt(gg[1]),parseInt(gg[2]),parseInt(gg[3]),parseInt(gg[4]),parseInt(gg[5]),parseInt(gg[6]));
       start = true;
-      console.log("Запускаем");
+      console.log(gg[1]);
+      console.log(gg[2]);
+      console.log(gg[3]);
+      console.log(gg[4]);
+      console.log(gg[5]);
+      console.log(gg[6]);
     }
     //chat.value = message.data + "\n" + chat.value;
-    console.log(message);
-
-    if (message.data =="v1") {
-    key_state.push;
-    console.log("Успользуем");
-  }
-  console.log(message);
-
-  if (message.data =="d1") {
-  key_stat2.push;
-  console.log("Прогрессируем");
-  }
-  console.log(message);
-
+if(gg[0]== 2) {
+    key_state.push(gg[1]);
+    console.log(gg[1]);
 }
+
+if(gg[0]== 3) {
+  key_stat2.push(gg[1]);
+  console.log(gg[1]);
+}
+};
   ws.onopen = function() {
     /*field.addEventListener("keydown", function(event) {
       if(event.which === 13) {
